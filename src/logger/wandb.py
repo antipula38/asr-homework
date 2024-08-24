@@ -2,31 +2,35 @@ from datetime import datetime
 
 import numpy as np
 import pandas as pd
-from omegaconf import OmegaConf
-
-import wandb
 
 
-class WanDBWriter:
-    def __init__(self, config, logger):
-        self.writer = None
-        self.selected_module = ""
-
+class WandBWriter:
+    def __init__(
+        self,
+        logger,
+        project_config,
+        project_name,
+        entity=None,
+        run_id=None,
+        run_name=None,
+        mode="online",
+        **kwargs,
+    ):
         try:
             import wandb
 
             wandb.login()
 
-            self.run_id = config.writer.run_id
+            self.run_id = run_id
 
             wandb.init(
-                project=config.writer.get("project_name"),
-                entity=config.writer.get("entity", None),
-                config=OmegaConf.to_container(config),
-                name=config.writer.get("run_name", None),
+                project=project_name,
+                entity=entity,
+                config=project_config,
+                name=run_name,
                 resume="allow",  # resume the run if run_id existed
                 id=self.run_id,
-                mode=config.writer.get("mode", "online"),
+                mode=mode,
             )
             self.wandb = wandb
 
@@ -67,10 +71,8 @@ class WanDBWriter:
     def add_scalars(self, tag, scalars):
         self.wandb.log(
             {
-                **{
-                    f"{scalar_name}_{tag}_{self.mode}": scalar
-                    for scalar_name, scalar in scalars.items()
-                }
+                f"{scalar_name}_{tag}_{self.mode}": scalar
+                for scalar_name, scalar in scalars.items()
             },
             step=self.step,
         )
@@ -108,7 +110,7 @@ class WanDBWriter:
 
     def add_table(self, table_name, table: pd.DataFrame):
         self.wandb.log(
-            {self._scalar_name(table_name): wandb.Table(dataframe=table)},
+            {self._scalar_name(table_name): self.wandb.Table(dataframe=table)},
             step=self.step,
         )
 
