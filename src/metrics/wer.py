@@ -10,20 +10,39 @@ from src.metrics.utils import calc_wer
 # Note: they can be written in a pretty way
 # Note 2: overall metric design can be significantly improved
 
-
-class ArgmaxWERMetric(BaseMetric):
+class BaseWERMetric(BaseMetric):
     def __init__(self, text_encoder, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.text_encoder = text_encoder
 
+    def _decode(self, log_probs: Tensor, length: int) -> str:
+        raise NotImplementedError
+
     def __call__(
-        self, log_probs: Tensor, log_probs_length: Tensor, text: List[str], **kwargs
-    ):
+            self, log_probs: Tensor, log_probs_length: Tensor, text: List[str], **kwargs
+        ):
         wers = []
-        predictions = torch.argmax(log_probs.cpu(), dim=-1).numpy()
-        lengths = log_probs_length.detach().numpy()
-        for log_prob_vec, length, target_text in zip(predictions, lengths, text):
+
+        lengths = log_probs_length.detach().cpu().tolist()
+
+        for log_prob_vec, length, target_text in zip(log_probs, lengths, text):
             target_text = self.text_encoder.normalize_text(target_text)
-            pred_text = self.text_encoder.ctc_decode(log_prob_vec[:length])
+            pred_text = self._decode(log_prob_vec, length)
             wers.append(calc_wer(target_text, pred_text))
+
         return sum(wers) / len(wers)
+    
+
+class ArgmaxWERMetric(BaseWERMetric):
+    def _decode(self, log_probs: Tensor, length: int) -> str:
+        log_prob_vec = torch.argmax(log_probs[:length], dim=-1).detach().cpu().tolist()
+        return self.text_encoder.ctc_decode(log_prob_vec)
+
+class BeamSearchWERMetric(BaseWERMetric):
+    def __init__(self, text_encoder, beam_size=10, *args, **kwargs):
+        super().__init__(text_encoder, *args, **kwargs)
+        self.beam_size = beam_size
+    
+    def _decode(self, log_probs: Tensor, length: int) -> str:
+        return self.text_encoder.ctc_beam_search(log_probs[:length], beam_size=self.beam_size)
+

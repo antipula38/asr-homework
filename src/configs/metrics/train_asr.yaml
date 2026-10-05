@@ -1,0 +1,14 @@
+train: []
+
+inference:
+  - _target_: src.metrics.ArgmaxErrorMetric
+    calc_metric:
+      _target_: src.metrics.utils.calc_cer
+      _partial_: true
+    name: "CER_(Argmax)"
+
+  - _target_: src.metrics.ArgmaxErrorMetric
+    calc_metric:
+      _target_: src.metrics.utils.calc_wer
+      _partial_: true
+    name: "WER_(Argmax)"

@@ -112,3 +112,9 @@ outputs/
 .vscode/
 .idea/
 __MACOSX/
+
+# macOS
+.DS_Store
+
+# temporary files
+*.tmp

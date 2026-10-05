@@ -1,0 +1,18 @@
+_target_: src.model.DeepSpeech2
+n_feats: 128
+
+conv_channels:
+  - 32
+  - 32
+
+conv_kernel_sizes:
+  - [41, 11]
+  - [21, 11]
+
+conv_strides:
+  - [2, 2]
+  - [2, 1]
+
+hidden_size: 512
+num_layers: 3
+bidirectional: true

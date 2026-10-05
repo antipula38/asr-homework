@@ -1,6 +1,8 @@
 import re
 from string import ascii_lowercase
-
+from collections import defaultdict
+import math
+import heapq
 import torch
 
 # TODO add CTC decode
@@ -11,7 +13,7 @@ import torch
 
 
 class CTCTextEncoder:
-    EMPTY_TOK = ""
+    EMPTY_TOK = '^'
 
     def __init__(self, alphabet=None, **kwargs):
         """
@@ -39,7 +41,7 @@ class CTCTextEncoder:
     def encode(self, text) -> torch.Tensor:
         text = self.normalize_text(text)
         try:
-            return torch.Tensor([self.char2ind[char] for char in text]).unsqueeze(0)
+            return torch.tensor([self.char2ind[char] for char in text], dtype=torch.long).unsqueeze(0)
         except KeyError:
             unknown_chars = set([char for char in text if char not in self.char2ind])
             raise Exception(
@@ -59,7 +61,89 @@ class CTCTextEncoder:
         return "".join([self.ind2char[int(ind)] for ind in inds]).strip()
 
     def ctc_decode(self, inds) -> str:
-        pass  # TODO
+        EMPTY_IND = self.char2ind[self.EMPTY_TOK]
+        last_ind = -1
+        res = ""
+        for ind in inds:
+            if ind != last_ind and ind != EMPTY_IND:
+                res += self.ind2char[int(ind)]
+            last_ind = ind
+        return res.strip()
+
+    def ctc_beam_search(self, log_probs, beam_size=10) -> str:
+        blank_ind = self.char2ind[self.EMPTY_TOK]
+        neg_inf = -float("inf")
+        log_probs = log_probs.detach().cpu().tolist()
+
+        def logaddexp(a, b):
+            if a == neg_inf:
+                return b
+            if b == neg_inf:
+                return a
+
+            m = max(a, b)
+            return m + math.log(
+                math.exp(a - m) + math.exp(b - m)
+            )
+
+
+        beam = {"": [0.0, neg_inf]}
+
+        for log_prob_t in log_probs:
+            next_beam = defaultdict(lambda: [neg_inf, neg_inf])
+            for prefix, (p_b, p_nb) in beam.items():
+                for ind, log_p in enumerate(log_prob_t):
+
+                    if ind == blank_ind: # blank
+                        next_beam[prefix][0] = logaddexp(
+                            next_beam[prefix][0],
+                            logaddexp(p_b, p_nb) + log_p
+                        )
+                        continue
+
+                    char = self.ind2char[ind]
+
+                    if len(prefix) > 0 and prefix[-1] == char:
+                        next_beam[prefix][1] = logaddexp(
+                            next_beam[prefix][1],
+                            p_nb + log_p
+                        ) # a -> a
+
+                        new_prefix = prefix + char
+
+                        next_beam[new_prefix][1] = logaddexp(
+                            next_beam[new_prefix][1],
+                            p_b + log_p
+                        ) #a -> ^ -> a
+
+                    else:
+                        new_prefix = prefix + char
+
+                        next_beam[new_prefix][1] = logaddexp(
+                            next_beam[new_prefix][1],
+                            logaddexp(p_b, p_nb) + log_p
+                        )
+
+            beam = dict(
+                heapq.nlargest(
+                    beam_size,
+                    next_beam.items(),
+                    key=lambda item: logaddexp(
+                        item[1][0],
+                        item[1][1]
+                    )
+                )
+            )
+        
+        best_prefix, _ = max(
+            beam.items(),
+            key=lambda item: logaddexp(item[1][0], item[1][1])
+        )
+
+        return best_prefix.strip()
+
+            
+
 
     @staticmethod
     def normalize_text(text: str):
