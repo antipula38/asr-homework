@@ -15,7 +15,5 @@ class RIR(nn.Module):
 
     def __call__(self, data: Tensor):
         x = data.unsqueeze(1)
-        print(data.shape)
-        print(self._aug(x).shape)
         return self._aug(x).squeeze(1)
     

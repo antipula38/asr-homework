@@ -2,7 +2,8 @@ from datetime import datetime
 
 import numpy as np
 import pandas as pd
-
+import torch
+from PIL import Image
 
 class CometMLWriter:
     """
@@ -40,7 +41,8 @@ class CometMLWriter:
         try:
             import comet_ml
 
-            comet_ml.login()
+            if mode == "online":
+                comet_ml.login()
 
             self.run_id = run_id
 
@@ -176,6 +178,14 @@ class CometMLWriter:
             image (Path | Tensor | ndarray | list[tuple] | Image): image
                 in the CometML-friendly format.
         """
+        if isinstance(image, np.ndarray) and image.ndim == 3:
+            if image.shape[0] in (1, 3, 4):
+                image = np.transpose(image, (1, 2, 0))
+        image = np.moveaxis(np.asarray(image), 0, -1)
+        image = (np.clip(image, 0, 1) * 255).astype(np.uint8)
+
+
+        image = Image.fromarray(image)
         self.exp.log_image(
             image_data=image, name=self._object_name(image_name), step=self.step
         )

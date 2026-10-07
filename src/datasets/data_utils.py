@@ -4,6 +4,8 @@ from hydra.utils import instantiate
 
 from src.datasets.collate import collate_fn
 from src.utils.init_utils import set_worker_seed
+from src.datasets.sortagrad_sampler import SortaGradSampler
+import torch
 
 
 def inf_loop(dataloader):
@@ -77,13 +79,27 @@ def get_dataloaders(config, text_encoder, device):
             f"be larger than the dataset length ({len(dataset)})"
         )
 
+        if dataset_partition == "train":
+            sampler = SortaGradSampler(dataset, seed=config.trainer.seed)
+            shuffle = False
+        else:
+            sampler = None
+            shuffle = False
+
+        generator = torch.Generator()
+        generator.manual_seed(
+            config.trainer.seed + (0 if dataset_partition == "train" else 1)
+        )
+        
         partition_dataloader = instantiate(
             config.dataloader,
             dataset=dataset,
             collate_fn=collate_fn,
             drop_last=(dataset_partition == "train"),
-            shuffle=(dataset_partition == "train"),
+            sampler=sampler,
+            shuffle=shuffle,
             worker_init_fn=set_worker_seed,
+            generator=generator,
         )
         dataloaders[dataset_partition] = partition_dataloader
 

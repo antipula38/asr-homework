@@ -167,6 +167,10 @@ class BaseTrainer:
         not_improved_count = 0
         for epoch in range(self.start_epoch, self.epochs + 1):
             self._last_epoch = epoch
+            
+            if hasattr(self.train_dataloader.sampler, "set_epoch"):
+                self.train_dataloader.sampler.set_epoch(epoch)  
+
             result = self._train_epoch(epoch)
 
             # save logged information into logs dict
