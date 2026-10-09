@@ -4,7 +4,6 @@ import torch
 from torch import Tensor
 
 from src.metrics.base_metric import BaseMetric
-from src.metrics.utils import calc_wer, calc_cer
 
 # TODO beam search / LM versions
 # Note: they can be written in a pretty way
@@ -22,16 +21,19 @@ class BaseErrorRateMetric(BaseMetric):
     def __call__(
             self, log_probs: Tensor, log_probs_length: Tensor, text: List[str], **kwargs
         ):
-        errors = []
+        total_dist = 0
+        total_length = 0
 
         lengths = log_probs_length.detach().cpu().tolist()
 
         for log_prob_vec, length, target_text in zip(log_probs, lengths, text):
             target_text = self.text_encoder.normalize_text(target_text)
             pred_text = self._decode(log_prob_vec, length)
-            errors.append(self.calc_metric(target_text, pred_text))
+            calls = self.calc_metric(target_text, pred_text)
+            total_dist += calls['dist']
+            total_length += calls['length']
 
-        return sum(errors) / len(errors)
+        return total_dist, total_length
     
 
 class ArgmaxErrorMetric(BaseErrorRateMetric):

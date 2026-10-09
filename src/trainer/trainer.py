@@ -58,7 +58,8 @@ class Trainer(BaseTrainer):
             metrics.update(loss_name, batch[loss_name].item())
 
         for met in metric_funcs:
-            metrics.update(met.name, met(**batch))
+            value, weight = met(**batch)
+            metrics.update_ratio(met.name, value, weight)
         return batch
 
     def _log_batch(self, batch_idx, batch, mode="train"):
@@ -108,8 +109,10 @@ class Trainer(BaseTrainer):
         rows = {}
         for pred, target, raw_pred, audio_path in tuples[:examples_to_log]:
             target = self.text_encoder.normalize_text(target)
-            wer = calc_wer(target, pred) * 100
-            cer = calc_cer(target, pred) * 100
+            wer_calls = calc_wer(target, pred)
+            cer_calls = calc_cer(target, pred)
+            wer = (wer_calls['dist'] / wer_calls['length']) * 100 if wer_calls['length'] !=0 else wer_calls['dist']
+            cer = (cer_calls['dist'] / cer_calls['length']) * 100 if cer_calls['length'] !=0 else cer_calls['dist']
 
             rows[Path(audio_path).name] = {
                 "target": target,

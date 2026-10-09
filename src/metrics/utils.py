@@ -24,24 +24,27 @@ def levenshtein_dist(a, b) -> int:
 
 
 
-def calc_cer(target_text, predicted_text) -> float:
+def calc_cer(target_text, predicted_text):
     if target_text == "":
         if predicted_text == "":
-            return 0
+            return {'dist': 0, 'length': len(target_text)}
         else:
-             return len(predicted_text)
+             return {'dist': len(predicted_text), 'length': len(target_text)}
 
     dist = levenshtein_dist(target_text, predicted_text)
-    return dist / len(target_text)
+
+    return {'dist': dist, 'length': len(target_text)}
 
 
-def calc_wer(target_text, predicted_text) -> float:
+
+
+def calc_wer(target_text, predicted_text):
     if len(target_text.split()) == 0:
         len_predicted_words = len(predicted_text.split())
         if len_predicted_words == 0:
-            return 0
+            return {'dist': 0, 'length': len(target_text.split())}
         else:
-            return len_predicted_words
+            return {'dist': len_predicted_words, 'length': len(target_text.split())}
         
     dist = levenshtein_dist(target_text.split(), predicted_text.split())
-    return dist / len(target_text.split())
+    return {'dist': dist, 'length': len(target_text.split())}
