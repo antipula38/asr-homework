@@ -1,5 +1,5 @@
-import torch_audiomentations
 from pathlib import Path
+import torch_audiomentations
 from torch import Tensor, nn
 
 

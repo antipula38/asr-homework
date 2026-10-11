@@ -81,6 +81,7 @@ class CometMLWriter:
             logger.warning("For use comet_ml install it via \n\t pip install comet_ml")
 
         self.step = 0
+        self.epoch = 0
         # the mode is usually equal to the current partition name
         # used to separate Partition1 and Partition2 metrics
         self.mode = ""
@@ -108,6 +109,9 @@ class CometMLWriter:
                 "steps_per_sec", (self.step - previous_step) / duration.total_seconds()
             )
             self.timer = datetime.now()
+
+    def set_epoch(self, epoch):
+        self.epoch = epoch
 
     def _object_name(self, object_name):
         """
@@ -152,7 +156,9 @@ class CometMLWriter:
                 self._object_name(scalar_name): scalar,
             },
             step=self.step,
+            epoch=self.epoch,
         )
+    
 
     def add_scalars(self, scalars):
         """

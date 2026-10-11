@@ -28,10 +28,13 @@ def main(config):
     logger = setup_saving_and_logging(config)
     writer = instantiate(config.writer, logger, project_config)
 
-    if config.trainer.device == "auto":
-        device = "cuda" if torch.cuda.is_available() else "cpu"
+    if torch.cuda.is_available():
+        device = "cuda"
+    elif torch.backends.mps.is_available():
+        device = "mps"
     else:
-        device = config.trainer.device
+        device = "cpu"
+    print("Device:", device)
 
     # setup text_encoder
     text_encoder = instantiate(config.text_encoder)
