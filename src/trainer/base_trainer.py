@@ -76,6 +76,7 @@ class BaseTrainer:
         self.batch_transforms = batch_transforms
 
         # define dataloaders
+        self.train_sampler = getattr(dataloaders["train"], "sampler", None)
         self.train_dataloader = dataloaders["train"]
         if epoch_len is None:
             # epoch-based training
@@ -168,9 +169,8 @@ class BaseTrainer:
         for epoch in range(self.start_epoch, self.epochs + 1):
             self._last_epoch = epoch
 
-            if hasattr(self.train_dataloader.sampler, "set_epoch"):
-                self.train_dataloader.sampler.set_epoch(epoch)  
-
+            if self.train_sampler is not None and hasattr(self.train_sampler, "set_epoch"):
+                self.train_sampler.set_epoch(epoch)
             result = self._train_epoch(epoch)
 
             # save logged information into logs dict

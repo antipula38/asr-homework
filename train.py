@@ -7,6 +7,7 @@ from omegaconf import OmegaConf
 
 from src.datasets.data_utils import get_dataloaders
 from src.trainer import Trainer
+from src.trainer.ema_trainer import EMATrainer
 from src.utils.init_utils import set_random_seed, setup_saving_and_logging
 
 warnings.filterwarnings("ignore", category=UserWarning)
@@ -28,12 +29,17 @@ def main(config):
     logger = setup_saving_and_logging(config)
     writer = instantiate(config.writer, logger, project_config)
 
-    if torch.cuda.is_available():
+    requested_device = config.trainer.get("device", "auto")
+
+    if requested_device != "auto":
+        device = str(requested_device)
+    elif torch.cuda.is_available():
         device = "cuda"
     elif torch.backends.mps.is_available():
         device = "mps"
     else:
         device = "cpu"
+
     print("Device:", device)
 
     # setup text_encoder
@@ -75,7 +81,13 @@ def main(config):
         steps_per_epoch=steps_per_epoch,
     )
 
-    trainer = Trainer(
+    trainer_cls = (
+        EMATrainer
+        if config.trainer.get("use_ema", False)
+        else Trainer
+    )
+    
+    trainer = trainer_cls(
         model=model,
         criterion=loss_function,
         metrics=metrics,
@@ -92,6 +104,11 @@ def main(config):
         skip_oom=config.trainer.get("skip_oom", True),
     )
 
+    print("Train loader type:", type(trainer.train_dataloader))
+    print("Train loader:", trainer.train_dataloader)
+
+    for part, loader in trainer.evaluation_dataloaders.items():
+        print(part, type(loader))
     trainer.train()
 
 

@@ -4,7 +4,7 @@ defaults:
   - metrics: example
   - datasets: example
   - dataloader: example
-  - transforms: example_only_instance
+  - transforms: clean_no_aug
   - _self_
 optimizer:
   _target_: torch.optim.AdamW
@@ -32,4 +32,4 @@ trainer:
   save_period: 5 # checkpoint each save_period epochs in addition to the best epoch
   early_stop: ${trainer.n_epochs} # epochs for early stopping
   save_dir: "saved"
-  seed: 1
+  seed: 42

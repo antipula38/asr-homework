@@ -1,0 +1,67 @@
+
+defaults:
+  - model: deepspeech2
+  - writer: cometml
+  - metrics: train_asr
+  - datasets: librispeech_train
+  - dataloader: example
+  - transforms: clean_no_aug
+  - _self_
+
+optimizer:
+  _target_: torch.optim.AdamW
+  lr: 3e-4
+  weight_decay: 0.01
+
+lr_scheduler:
+  _target_: torch.optim.lr_scheduler.OneCycleLR
+  max_lr: 1e-3
+  pct_start: 0.1
+  epochs: ${trainer.n_epochs}
+  anneal_strategy: cos
+
+loss_function:
+  _target_: src.loss.CTCLossWrapper
+
+text_encoder:
+  _target_: src.text_encoder.CTCTextEncoder
+
+datasets:
+  train:
+    part: train-clean-100
+    limit: null
+  val:
+    part: dev-clean
+    limit: null
+
+dataloader:
+  batch_size: 64
+  num_workers: 2
+  persistent_workers: false
+
+trainer:
+  log_step: 50
+  n_epochs: 15
+  epoch_len: null
+
+  device_tensors:
+    - spectrogram
+    - text_encoded
+
+  resume_from: null
+  device: auto
+  override: false
+
+  monitor: "min val_ema_WER_(Argmax)"
+
+  save_period: 5
+  early_stop: ${trainer.n_epochs}
+  save_dir: saved
+  seed: 42
+
+  use_ema: true
+  ema_decay: 0.999
+
+writer:
+  run_name: ds2_clean_ema_lr1e3_bs64
+  mode: offline

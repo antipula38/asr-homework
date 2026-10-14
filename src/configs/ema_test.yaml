@@ -1,0 +1,15 @@
+defaults:
+  - baseline
+  - _self_
+
+trainer:
+  use_ema: true
+  ema_decay: 0.999
+  n_epochs: 2
+  epoch_len: 2
+  monitor: "min val_ema_WER_(Argmax)"
+  resume_from: null
+
+writer:
+  run_name: "ema_smoke_test_2"
+  project_name: "asr-ema-tests"

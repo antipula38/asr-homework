@@ -29,5 +29,5 @@ inferencer:
     - text_encoded
   device: auto
   save_path: "beam_search_test"
-  seed: 1
+  seed: 42
   from_pretrained: "saved/testing/model_best.pth"
