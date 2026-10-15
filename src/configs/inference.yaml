@@ -14,10 +14,11 @@
 
 defaults:
   - model: deepspeech2
-  - metrics: error_rates
+  - metrics: beam_lm
+  - lm: lm_best_parametr
   - datasets: onebatchtest_eval
   - dataloader: example
-  - transforms: example_only_instance
+  - transforms: clean_no_aug
   - _self_
 
 text_encoder:
@@ -31,3 +32,5 @@ inferencer:
   save_path: "beam_search_test"
   seed: 42
   from_pretrained: "saved/testing/model_best.pth"
+  class_path: src.trainer.Inferencer
+  results_path: null

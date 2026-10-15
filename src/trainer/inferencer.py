@@ -5,6 +5,7 @@ from src.metrics.tracker import MetricTracker
 from src.trainer.base_trainer import BaseTrainer
 
 
+
 class Inferencer(BaseTrainer):
     """
     Inferencer (Like Trainer but for Inference) class
@@ -131,7 +132,8 @@ class Inferencer(BaseTrainer):
 
         if metrics is not None:
             for met in self.metrics["inference"]:
-                metrics.update(met.name, met(**batch))
+                dist, length = met(**batch)
+                metrics.update_ratio(met.name, dist, length)
         return batch
 
         # Some saving logic. This is an example

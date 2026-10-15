@@ -49,3 +49,10 @@ class BeamSearchErrorMetric(BaseErrorRateMetric):
     def _decode(self, log_probs: Tensor, length: int) -> str:
         return self.text_encoder.ctc_beam_search(log_probs[:length], beam_size=self.beam_size)
 
+class BeamSearchLMErrorMetric(BaseErrorRateMetric):
+    def __init__(self, text_encoder, calc_metric, beam_size=10, *args, **kwargs):
+        super().__init__(text_encoder, calc_metric, *args, **kwargs)
+        self.beam_size = beam_size
+
+    def _decode(self, log_probs: Tensor, length: int) -> str:
+        return self.text_encoder.ctc_decode_lm(log_probs[:length], beam_size=self.beam_size)

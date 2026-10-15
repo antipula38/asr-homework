@@ -1,0 +1,7 @@
+inference:
+  - _target_: src.metrics.BeamSearchLMErrorMetric
+    name: WER_Beam_LM
+    beam_size: ${lm.beam_size}
+    calc_metric:
+      _target_: src.metrics.utils.calc_wer
+      _partial_: true

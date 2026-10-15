@@ -1,6 +1,7 @@
 import re
 from string import ascii_lowercase
 from collections import defaultdict
+from pyctcdecode import build_ctcdecoder
 import math
 import heapq
 import torch
@@ -141,6 +142,34 @@ class CTCTextEncoder:
         )
 
         return best_prefix.strip()
+
+    def load_lm(self, lm_path, alpha=0.5, beta=1.0):
+
+        labels = [
+            "" if char == self.EMPTY_TOK else char.upper()
+            for char in self.vocab
+        ]
+
+        self.lm_decoder = build_ctcdecoder(
+            labels=labels,
+            kenlm_model_path=str(lm_path),
+            alpha=float(alpha),
+            beta=float(beta),
+        )
+
+    def ctc_decode_lm(self, log_probs, beam_size=25):
+        if not hasattr(self, "lm_decoder"):
+            raise RuntimeError("Load LM before decoding")
+
+        assert log_probs.ndim == 2
+        assert log_probs.shape[-1] == len(self.vocab)
+
+        probs = log_probs.exp().detach().cpu().numpy()
+
+        return self.lm_decoder.decode(
+            probs,
+            beam_width=beam_size,
+        ).strip().lower()
 
             
 

@@ -2,12 +2,14 @@ import warnings
 
 import hydra
 import torch
-from hydra.utils import instantiate
+from hydra.utils import instantiate, get_class
+from pathlib import Path
 
 from src.datasets.data_utils import get_dataloaders
 from src.trainer import Inferencer
 from src.utils.init_utils import set_random_seed
 from src.utils.io_utils import ROOT_PATH
+from src.utils.inference_results import save_inference_results
 
 warnings.filterwarnings("ignore", category=UserWarning)
 
@@ -31,6 +33,19 @@ def main(config):
 
     # setup text_encoder
     text_encoder = instantiate(config.text_encoder)
+    lm_config = config.get("lm")
+
+    if lm_config is not None and lm_config.get("enabled", False):
+        lm_path = Path(lm_config.path)
+
+        if not lm_path.is_absolute():
+            lm_path = ROOT_PATH / lm_path
+
+        text_encoder.load_lm(
+            lm_path=lm_path,
+            alpha=lm_config.alpha,
+            beta=lm_config.beta,
+        )
 
     # setup data_loader instances
     # batch_transforms should be put on device
@@ -52,7 +67,13 @@ def main(config):
     save_path = ROOT_PATH / "data" / "saved" / config.inferencer.save_path
     save_path.mkdir(exist_ok=True, parents=True)
 
-    inferencer = Inferencer(
+    inferencer_cls = get_class(
+        config.inferencer.get(
+            "class_path",
+            "src.trainer.Inferencer",
+        )
+    )
+    inferencer = inferencer_cls(
         model=model,
         config=config,
         device=device,
@@ -70,6 +91,22 @@ def main(config):
         for key, value in logs[part].items():
             full_key = part + "_" + key
             print(f"    {full_key:15s}: {value}")
+            
+    results_path = config.inferencer.get("results_path")
+
+    if results_path is not None:
+        results_path = Path(results_path)
+
+        if not results_path.is_absolute():
+            results_path = ROOT_PATH / results_path
+
+        save_inference_results(
+            logs=logs,
+            config=config,
+            output_path=results_path,
+        )
+
+        print(f"Inference results saved to: {results_path}")
 
 
 if __name__ == "__main__":

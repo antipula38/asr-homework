@@ -82,7 +82,6 @@ class BaseDataset(Dataset):
         audio_path = data_dict["path"]
         audio = self.load_audio(audio_path)
 
-        audio_before_aug = audio.clone()
 
         text = data_dict["text"]
         text_encoded = self.text_encoder.encode(text)
@@ -92,22 +91,7 @@ class BaseDataset(Dataset):
             and "audio" in self.instance_transforms
         ):
             audio = self.instance_transforms["audio"](audio)
-            if ind == 0:
-                torchaudio.save(
-                    "debug_original.wav",
-                    audio_before_aug.cpu(),
-                    self.target_sr,
-                )
-                torchaudio.save(
-                    "debug_augmented.wav",
-                    audio.cpu(),
-                    self.target_sr,
-                )
-
-                print(
-                    "audio changed:",
-                    not torch.equal(audio_before_aug, audio)
-                )
+            
 
 
         spectrogram = self.get_spectrogram(audio)

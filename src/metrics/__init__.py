@@ -1,1 +1,1 @@
-from src.metrics.base_error import ArgmaxErrorMetric, BeamSearchErrorMetric
+from src.metrics.base_error import ArgmaxErrorMetric, BeamSearchErrorMetric, BeamSearchLMErrorMetric

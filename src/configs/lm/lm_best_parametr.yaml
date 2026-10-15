@@ -1,0 +1,8 @@
+enabled: true
+
+path: resources/lm/3-gram.pruned.1e-7.arpa
+
+alpha: 0.5
+beta: 1.5
+
+beam_size: 200

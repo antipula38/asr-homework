@@ -1,0 +1,16 @@
+train: []
+
+inference:
+  - _target_: src.metrics.BeamSearchLMErrorMetric
+    calc_metric:
+      _target_: src.metrics.utils.calc_cer
+      _partial_: true
+    beam_size: ${lm.beam_size}
+    name: "CER_(BeamSearch_LM)"
+
+  - _target_: src.metrics.BeamSearchLMErrorMetric
+    calc_metric:
+      _target_: src.metrics.utils.calc_wer
+      _partial_: true
+    beam_size: ${lm.beam_size}
+    name: "WER_(BeamSearch_LM)"
