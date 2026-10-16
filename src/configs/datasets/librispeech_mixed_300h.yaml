@@ -1,0 +1,28 @@
+train:
+  _target_: src.datasets.MixedLibrispeechDataset
+
+  parts_hours:
+    train-clean-100: null
+    train-clean-360: 80.0
+    train-other-500: 120.0
+
+  manifest_path: data/manifests/librispeech_mixed_300h_seed42.json
+  seed: 42
+
+  instance_transforms: ${transforms.instance_transforms.train}
+
+  limit: null
+  max_audio_length: null
+  max_text_length: null
+
+
+val:
+  _target_: src.datasets.LibrispeechDataset
+
+  part: dev-other
+
+  instance_transforms: ${transforms.instance_transforms.inference}
+
+  limit: null
+  max_audio_length: null
+  max_text_length: null
