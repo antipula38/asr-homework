@@ -16,3 +16,4 @@ conv_strides:
 hidden_size: 512
 num_layers: 3
 bidirectional: true
+dropout: 0.0

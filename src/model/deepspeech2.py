@@ -4,7 +4,7 @@ from torch.nn.utils.rnn import pack_padded_sequence, pad_packed_sequence
 
 class DeepSpeech2(nn.Module):
 
-    def __init__(self, n_feats, n_tokens, conv_channels=(32, 32), conv_kernel_sizes=((41, 11), (21, 11)), conv_strides=((2, 2), (2, 1)), hidden_size=512, num_layers=3, bidirectional=True):
+    def __init__(self, n_feats, n_tokens, conv_channels=(32, 32), conv_kernel_sizes=((41, 11), (21, 11)), conv_strides=((2, 2), (2, 1)), hidden_size=512, num_layers=3, bidirectional=True, dropout=0.0):
         super().__init__()
         padding_list = [((kernel[0] - 1) // 2, (kernel[1] - 1) // 2) for kernel in conv_kernel_sizes]
 
@@ -30,13 +30,16 @@ class DeepSpeech2(nn.Module):
 
         rnn_input_size = in_channels * freq_in
 
+        if not 0.0 <= dropout <= 1.0:
+            raise ValueError("dropout must be between 0 and 1")
 
         self.gru_bi = nn.GRU(
             input_size = rnn_input_size,
             hidden_size = hidden_size,
             num_layers = num_layers,
             bidirectional = bidirectional,
-            batch_first = True
+            batch_first = True,
+            dropout=dropout if num_layers > 1 else 0.0
         )
         lin_in_features = hidden_size * (int(bidirectional) + 1)
         self.linear = nn.Linear(in_features=lin_in_features, out_features=n_tokens)
