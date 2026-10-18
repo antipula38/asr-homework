@@ -19,13 +19,7 @@ instance_transforms:
           max_snr_in_db: 30.0
           p: 0.2
           sample_rate: 16000
-
-        - _target_: src.transforms.wav_augs.PitchShift
-          min_transpose_semitones: -2.0
-          max_transpose_semitones: 2.0
-          p: 0.1
-          sample_rate: 16000
-
+          
         - _target_: src.transforms.wav_augs.TimeStretch
           min_rate: 0.9
           max_rate: 1.1
@@ -35,6 +29,15 @@ instance_transforms:
           ir_paths: data/augmentation/RIRS_NOISES/real_rirs_isotropic_noises
           p: 0.15
           sample_rate: 16000
+
+    spectrogram:
+      _target_: torchvision.transforms.v2.Compose
+      transforms:
+        - _target_: src.transforms.spec_augs.FrequencyMasking
+          freq_mask_param: 8
+
+        - _target_: src.transforms.spec_augs.TimeMasking
+          time_mask_param: 20
 
   inference:
     get_spectrogram:
