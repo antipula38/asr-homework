@@ -44,6 +44,14 @@ def main(config):
 
     # setup text_encoder
     text_encoder = instantiate(config.text_encoder)
+    if "lm" in config and config.lm.get("enabled", False):
+        print(f"Loading language model from: {config.lm.path}")
+
+        text_encoder.load_lm(
+            config.lm.path,
+            alpha=config.lm.alpha,
+            beta=config.lm.beta,
+        )
 
     # setup data_loader instances
     # batch_transforms should be put on device
