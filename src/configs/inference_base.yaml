@@ -1,0 +1,4 @@
+defaults:
+  - transforms: clean_no_aug
+  - text_encoder: ctc
+  - _self_

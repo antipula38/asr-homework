@@ -1,0 +1,1 @@
+then she suddenly remarked

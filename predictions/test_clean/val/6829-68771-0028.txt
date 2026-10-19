@@ -1,0 +1,1 @@
+she even seemed mildly amused at the attention she attracted

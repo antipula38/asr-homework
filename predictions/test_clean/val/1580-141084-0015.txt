@@ -1,0 +1,1 @@
+he impressed me as being a perfectly honest man

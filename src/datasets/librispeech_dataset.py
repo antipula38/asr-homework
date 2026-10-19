@@ -1,3 +1,4 @@
+"""LibriSpeech dataset downloading and indexing utilities"""
 import json
 import os
 import shutil
@@ -22,7 +23,13 @@ URL_LINKS = {
 
 
 class LibrispeechDataset(BaseDataset):
+    """
+    Load, download, and index a LibriSpeech dataset split
+    """
     def __init__(self, part, data_dir=None, *args, **kwargs):
+        """
+        Initialize one LibriSpeech split or all training splits
+        """
         assert part in URL_LINKS or part == "train_all"
 
         if data_dir is None:
@@ -44,6 +51,9 @@ class LibrispeechDataset(BaseDataset):
         super().__init__(index, *args, **kwargs)
 
     def _load_part(self, part):
+        """
+        Download and extract a LibriSpeech split
+        """
         arch_path = self._data_dir / f"{part}.tar.gz"
         print(f"Loading part {part}")
         wget.download(URL_LINKS[part], str(arch_path))
@@ -54,6 +64,9 @@ class LibrispeechDataset(BaseDataset):
         shutil.rmtree(str(self._data_dir / "LibriSpeech"))
 
     def _get_or_load_index(self, part):
+        """
+        Load a cached split index or build a new one
+        """
         index_path = self._data_dir / f"{part}_index.json"
         if index_path.exists():
             with index_path.open() as f:
@@ -65,6 +78,9 @@ class LibrispeechDataset(BaseDataset):
         return index
 
     def _create_index(self, part):
+        """
+        Create metadata records for a LibriSpeech split
+        """
         index = []
         split_dir = self._data_dir / part
         if not split_dir.exists():

@@ -1,0 +1,1 @@
+they are chiefly formed from combinations of the impressions made in childhood

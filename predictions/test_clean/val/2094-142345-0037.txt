@@ -1,0 +1,1 @@
+we can all be servants of god wherever our lot is cast but he gives us different sorts of work according as he fits us for it and calls us to it

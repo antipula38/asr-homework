@@ -1,0 +1,8 @@
+defaults:
+  - base
+  - _self_
+
+use_ema: true
+ema_decay: 0.999
+
+monitor: "min val_ema_WER_(Argmax)"

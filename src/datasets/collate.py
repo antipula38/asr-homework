@@ -1,11 +1,12 @@
+"""Batch collation utilities for variable-length ASR samples"""
 import torch
 from torch.nn.utils.rnn import pad_sequence
 
 
 def collate_fn(dataset_items: list[dict]):
     """
-    Collate and pad fields in the dataset items.
-    Converts individual items into a batch.
+    Collate and pad fields in the dataset items
+    Converts individual items into a batch
 
     Args:
         dataset_items (list[dict]): list of objects from
@@ -49,7 +50,7 @@ def collate_fn(dataset_items: list[dict]):
         "audio_path": audio_paths,
         "audio_length": audio_length,
         "spectrogram_length": spectrogram_length,
-        "text_encoded_length": text_encoded_length
+        "text_encoded_length": text_encoded_length,
     }
 
     return result_batch

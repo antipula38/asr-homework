@@ -1,3 +1,4 @@
+"""Base dataset utilities shared by all ASR datasets."""
 import logging
 import random
 
@@ -13,11 +14,7 @@ logger = logging.getLogger(__name__)
 
 class BaseDataset(Dataset):
     """
-    Base class for the datasets.
-
-    Given a proper index (list[dict]), allows to process different datasets
-    for the same task in the identical manner. Therefore, to work with
-    several datasets, the user only have to define index in a nested class.
+    Provide shared loading, filtering, and preprocessing for ASR datasets
     """
 
     def __init__(
@@ -65,23 +62,11 @@ class BaseDataset(Dataset):
 
     def __getitem__(self, ind):
         """
-        Get element from the index, preprocess it, and combine it
-        into a dict.
-
-        Notice that the choice of key names is defined by the template user.
-        However, they should be consistent across dataset getitem, collate_fn,
-        loss_function forward method, and model forward method.
-
-        Args:
-            ind (int): index in the self.index list.
-        Returns:
-            instance_data (dict): dict, containing instance
-                (a single dataset element).
+        Load and preprocess one dataset item
         """
         data_dict = self._index[ind]
         audio_path = data_dict["path"]
         audio = self.load_audio(audio_path)
-
 
         text = data_dict["text"]
         text_encoded = self.text_encoder.encode(text)
@@ -91,9 +76,7 @@ class BaseDataset(Dataset):
             and "audio" in self.instance_transforms
         ):
             audio = self.instance_transforms["audio"](audio)
-            
-
-
+        
         spectrogram = self.get_spectrogram(audio)
 
         instance_data = {
@@ -104,20 +87,20 @@ class BaseDataset(Dataset):
             "audio_path": audio_path,
         }
 
-        # TODO think of how to apply wave augs before calculating spectrogram
-        # Note: you may want to preserve both audio in time domain and
-        # in time-frequency domain for logging
         instance_data = self.preprocess_data(instance_data)
 
         return instance_data
 
     def __len__(self):
         """
-        Get length of the dataset (length of the index).
+        Return the number of dataset items
         """
         return len(self._index)
 
     def load_audio(self, path):
+        """
+        Load audio and resample it to the target sample rate
+        """
         audio_tensor, sr = torchaudio.load(path)
         audio_tensor = audio_tensor[0:1, :]  # remove all channels but the first
         target_sr = self.target_sr
@@ -127,8 +110,7 @@ class BaseDataset(Dataset):
 
     def get_spectrogram(self, audio):
         """
-        Special instance transform with a special key to
-        get spectrogram from audio.
+        Convert an audio waveform to a spectrogram
 
         Args:
             audio (Tensor): original audio.
@@ -140,8 +122,6 @@ class BaseDataset(Dataset):
     def preprocess_data(self, instance_data):
         """
         Preprocess data with instance transforms.
-
-        Each tensor in a dict undergoes its own transform defined by the key.
 
         Args:
             instance_data (dict): dict, containing instance
@@ -224,8 +204,7 @@ class BaseDataset(Dataset):
     @staticmethod
     def _assert_index_is_valid(index):
         """
-        Check the structure of the index and ensure it satisfies the desired
-        conditions.
+        Validate required fields in each dataset index record
 
         Args:
             index (list[dict]): list, containing dict for each element of
@@ -248,7 +227,7 @@ class BaseDataset(Dataset):
     @staticmethod
     def _sort_index(index):
         """
-        Sort index by audio length.
+        Sort dataset records by audio duration
 
         Args:
             index (list[dict]): list, containing dict for each element of
@@ -264,7 +243,7 @@ class BaseDataset(Dataset):
     @staticmethod
     def _shuffle_and_limit_index(index, limit, shuffle_index):
         """
-        Shuffle elements in index and limit the total number of elements.
+        Shuffle elements in index and limit the total number of elements
 
         Args:
             index (list[dict]): list, containing dict for each element of

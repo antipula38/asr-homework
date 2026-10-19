@@ -1,0 +1,1 @@
+i wish i knew myself she cried fiercely

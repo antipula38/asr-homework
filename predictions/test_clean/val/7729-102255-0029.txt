@@ -1,0 +1,1 @@
+ten days were consumed in these negotiations but the spirit of vengeance refused to yield

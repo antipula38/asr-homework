@@ -1,17 +1,18 @@
+"""Build datasets, dataloaders, samplers, and batch transforms"""
 from itertools import repeat
 
+import torch
 from hydra.utils import instantiate
 
 from src.datasets.collate import collate_fn
 from src.utils.init_utils import set_worker_seed
 from src.datasets.sortagrad_sampler import SortaGradSampler
-import torch
+
 
 
 def inf_loop(dataloader):
     """
-    Wrapper function for endless dataloader.
-    Used for iteration-based training scheme.
+    Yield batches from a dataloader indefinitely
 
     Args:
         dataloader (DataLoader): classic finite dataloader.
@@ -22,15 +23,7 @@ def inf_loop(dataloader):
 
 def move_batch_transforms_to_device(batch_transforms, device):
     """
-    Move batch_transforms to device.
-
-    Notice that batch transforms are applied on the batch
-    that may be on GPU. Therefore, it is required to put
-    batch transforms on the device. We do it here.
-
-    Batch transforms are required to be an instance of nn.Module.
-    If several transforms are applied sequentially, use nn.Sequential
-    in the config (not torchvision.Compose).
+    Move batch_transforms to device
 
     Args:
         batch_transforms (dict[Callable] | None): transforms that
@@ -46,7 +39,9 @@ def move_batch_transforms_to_device(batch_transforms, device):
 
 
 def _get_seed(config):
-    """Get reproducibility seed for training or inference."""
+    """
+    Get reproducibility seed for training or inference
+    """
     if config.get("trainer") is not None:
         return config.trainer.get("seed", 42)
 
@@ -57,8 +52,8 @@ def _get_seed(config):
 
 def get_dataloaders(config, text_encoder, device):
     """
-    Create dataloaders for each of the dataset partitions.
-    Also creates instance and batch transforms.
+    Create dataloaders for each of the dataset partitions
+    Also creates instance and batch transforms
 
     Args:
         config (DictConfig): hydra experiment config.
@@ -87,7 +82,7 @@ def get_dataloaders(config, text_encoder, device):
 
 
         if dataset_partition == "train":
-            sampler = SortaGradSampler(dataset, seed=config.trainer.seed)
+            sampler = SortaGradSampler(dataset, seed=seed)
             shuffle = False
         else:
             sampler = None

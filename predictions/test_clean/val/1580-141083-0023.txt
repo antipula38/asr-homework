@@ -1,0 +1,1 @@
+one could hardly hope for any upon so dry a day

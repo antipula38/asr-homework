@@ -1,3 +1,4 @@
+"""Common Voice dataset integration"""
 import json
 import re
 from pathlib import Path
@@ -11,7 +12,13 @@ from src.utils.io_utils import ROOT_PATH
 
 
 class CommonVoiceDataset(BaseDataset):
+    """
+    Load and index the English Mozilla Common Voice dataset
+    """
     def __init__(self, split, *args, **kwargs):
+        """
+        Initialize a Common Voice split and its cached index
+        """
         self._data_dir = ROOT_PATH / "dataset_common_voice"
         self._regex = re.compile("[^a-z ]")
         self._dataset = load_dataset(
@@ -24,6 +31,9 @@ class CommonVoiceDataset(BaseDataset):
         super().__init__(index, *args, **kwargs)
 
     def _get_or_load_index(self, split):
+        """
+        Load a cached split index or create it from the dataset
+        """
         index_path = self._data_dir / f"{split}_index.json"
         if index_path.exists():
             with index_path.open() as f:

@@ -1,0 +1,8 @@
+defaults:
+  - writer: cometml
+  - transforms: clean_no_aug
+  - optimizer: adamw
+  - lr_scheduler: one_cycle
+  - loss_function: ctc
+  - text_encoder: ctc
+  - _self_

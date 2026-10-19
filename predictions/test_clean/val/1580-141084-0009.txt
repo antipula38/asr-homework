@@ -1,0 +1,1 @@
+it is possible that i may be in a position then to indicate some course of action

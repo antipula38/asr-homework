@@ -1,0 +1,1 @@
+he came down to earth lived among men suffered was crucified and then he died standing clearly before us so that our hearts and eyes may fasten upon him

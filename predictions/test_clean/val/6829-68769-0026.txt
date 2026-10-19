@@ -1,0 +1,1 @@
+he spoke simply but paced up and down the narrow cell in front of them

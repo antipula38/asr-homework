@@ -1,0 +1,1 @@
+men should not speculate about the nature of god

@@ -1,0 +1,1 @@
+he felt he was up against it and that perhaps another kind of a job would suit him better

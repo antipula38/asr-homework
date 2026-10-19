@@ -1,0 +1,1 @@
+as he had promised to protect the hotel the reassured citizens began to laugh at their own fears

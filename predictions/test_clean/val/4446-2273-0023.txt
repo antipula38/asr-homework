@@ -1,0 +1,1 @@
+the strange woman and her passionate sentence that rang out so sharply had frightened them both

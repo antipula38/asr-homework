@@ -1,0 +1,7 @@
+defaults:
+  - base
+  - _self_
+
+batch_size: 32
+num_workers: 0
+persistent_workers: false

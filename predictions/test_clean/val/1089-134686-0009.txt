@@ -1,0 +1,1 @@
+at most by an alms given to a beggar whose blessing he fled from he might hope wearily to win for himself some measure of actual grace

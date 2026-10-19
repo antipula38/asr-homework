@@ -1,72 +1,11 @@
-# defaults:
-#   - model: deepspeech2
-#   - metrics: beam_lm
-#   - lm: lm_best_parametr
-#   - datasets: custom_dir
-#   - dataloader: example
-#   - transforms: clean_no_aug
-#   - _self_
+# Final ASR inference configuration using EMA weights and an external LM.
 
-# text_encoder:
-#   _target_: src.text_encoder.CTCTextEncoder
-
-# inferencer:
-#   device_tensors:
-#     - spectrogram
-#     - text_encoded
-#   device: auto
-#   save_path: "beam_search_test"
-#   seed: 42
-#   from_pretrained: "saved/testing/model_best.pth"
-#   class_path: src.trainer.Inferencer
-#   save_path: predictions
-#   results_path: null
-#   class_path: src.trainer.EMAInferencer
 defaults:
+  - inference_base
   - model: deepspeech2
-  - metrics: beam_lm
+  - metrics: inference
   - datasets: custom_dir
-  - lm: lm_best_parametr
+  - dataloader: inference
+  - lm: best
+  - inferencer: ema
   - _self_
-
-text_encoder:
-  _target_: src.text_encoder.CTCTextEncoder
-
-transforms:
-  instance_transforms:
-    inference:
-      get_spectrogram:
-        _target_: torchaudio.transforms.MelSpectrogram
-        sample_rate: 16000
-        n_mels: 128
-
-  batch_transforms:
-    inference: null
-
-dataloader:
-  _target_: torch.utils.data.DataLoader
-  batch_size: 16
-  num_workers: 0
-  pin_memory: true
-  persistent_workers: false
-
-inferencer:
-  device: auto
-  seed: 42
-
-  device_tensors:
-    - spectrogram
-    - text_encoded
-
-  from_pretrained: null
-
-  class_path: src.trainer.EMAInferencer
-
-  save_path: predictions
-  results_path: null
-
-  # beam_lm | beam | argmax
-  decoder: beam_lm
-
-  # только для обычного beam
-  beam_size: 10

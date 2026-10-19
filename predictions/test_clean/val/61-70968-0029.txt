@@ -1,0 +1,1 @@
+the squire helped to thrust them all in and entered swiftly himself

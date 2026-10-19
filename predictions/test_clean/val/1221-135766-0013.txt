@@ -1,0 +1,1 @@
+pearl was a born outcast of the infantile world

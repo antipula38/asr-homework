@@ -1,12 +1,11 @@
 import warnings
+from pathlib import Path
 
 import hydra
 import torch
 from hydra.utils import instantiate, get_class
-from pathlib import Path
 
 from src.datasets.data_utils import get_dataloaders
-from src.trainer import Inferencer
 from src.utils.init_utils import set_random_seed
 from src.utils.io_utils import ROOT_PATH
 from src.utils.inference_results import save_inference_results
@@ -16,13 +15,9 @@ warnings.filterwarnings("ignore", category=UserWarning)
 
 @hydra.main(version_base=None, config_path="src/configs", config_name="inference")
 def main(config):
-    """
-    Main script for inference. Instantiates the model, metrics, and
-    dataloaders. Runs Inferencer to calculate metrics and (or)
-    save predictions.
-
+    """Build the ASR inference pipeline and run prediction
     Args:
-        config (DictConfig): hydra experiment config.
+            config (DictConfig): hydra experiment config.
     """
     set_random_seed(config.inferencer.seed)
 
@@ -64,7 +59,11 @@ def main(config):
         )
 
     # save_path for model predictions
-    save_path = ROOT_PATH / "data" / "saved" / config.inferencer.save_path
+    save_path = Path(config.inferencer.save_path)
+
+    if not save_path.is_absolute():
+        save_path = ROOT_PATH / save_path
+    
     save_path.mkdir(exist_ok=True, parents=True)
 
     inferencer_cls = get_class(
@@ -90,7 +89,7 @@ def main(config):
     for part in logs.keys():
         for key, value in logs[part].items():
             full_key = part + "_" + key
-            print(f"    {full_key:15s}: {value}")
+            print(f"{full_key:15s}: {value}")
             
     results_path = config.inferencer.get("results_path")
 

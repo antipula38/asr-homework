@@ -1,0 +1,1 @@
+there was a grim smile of amusement on his shrewd face

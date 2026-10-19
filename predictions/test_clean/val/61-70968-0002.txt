@@ -1,0 +1,1 @@
+a golden fortune and a happy life

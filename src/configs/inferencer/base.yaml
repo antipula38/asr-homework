@@ -1,0 +1,16 @@
+device: auto
+seed: 42
+
+device_tensors:
+  - spectrogram
+  - text_encoded
+
+from_pretrained: null
+
+class_path: src.trainer.Inferencer
+
+save_path: predictions
+results_path: null
+
+decoder: argmax
+beam_size: 10

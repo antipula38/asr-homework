@@ -1,5 +1,6 @@
-from pathlib import Path
+"""Dataset implementation for user-provided ASR directories"""
 
+from pathlib import Path
 import torchaudio
 
 from src.datasets.base_dataset import BaseDataset
@@ -7,32 +8,12 @@ from src.datasets.base_dataset import BaseDataset
 
 class CustomDirDataset(BaseDataset):
     """
-    Dataset for directories of the form:
-
-    root/
-    ├── audio/
-    │   ├── utterance_1.wav
-    │   ├── utterance_2.flac
-    │   └── utterance_3.mp3
-    └── transcriptions/          # optional
-        ├── utterance_1.txt
-        ├── utterance_2.txt
-        └── utterance_3.txt
+    Load audio and optional transcriptions from a custom directory
     """
 
     SUPPORTED_EXTENSIONS = {".wav", ".flac", ".mp3"}
 
-    def __init__(
-        self,
-        data_dir,
-        text_encoder=None,
-        target_sr=16000,
-        limit=None,
-        max_audio_length=None,
-        max_text_length=None,
-        shuffle_index=False,
-        instance_transforms=None,
-    ):
+    def __init__(self, data_dir, text_encoder=None, target_sr=16000, limit=None, max_audio_length=None, max_text_length=None, shuffle_index=False, instance_transforms=None):
         data_dir = Path(data_dir).expanduser().resolve()
         audio_dir = data_dir / "audio"
         transcription_dir = data_dir / "transcriptions"
@@ -59,13 +40,11 @@ class CustomDirDataset(BaseDataset):
                 f"No .wav, .flac or .mp3 files found in {audio_dir}"
             )
 
-        # UtteranceID is filename without extension.
         utterance_ids = [path.stem for path in audio_files]
 
         if len(utterance_ids) != len(set(utterance_ids)):
             raise RuntimeError(
                 "Two audio files have the same UtteranceID "
-                "(same filename stem)."
             )
 
         index = []
@@ -74,11 +53,8 @@ class CustomDirDataset(BaseDataset):
             utterance_id = audio_path.stem
             text_path = transcription_dir / f"{utterance_id}.txt"
 
-            # Ground truth is optional.
             if text_path.is_file():
-                text = text_path.read_text(
-                    encoding="utf-8"
-                ).strip()
+                text = text_path.read_text(encoding="utf-8").strip()
             else:
                 text = ""
 
@@ -92,25 +68,12 @@ class CustomDirDataset(BaseDataset):
                 }
             )
 
-        super().__init__(
-            index=index,
-            text_encoder=text_encoder,
-            target_sr=target_sr,
-            limit=limit,
-            max_audio_length=max_audio_length,
-            max_text_length=max_text_length,
-            shuffle_index=shuffle_index,
-            instance_transforms=instance_transforms,
-        )
+        super().__init__(index=index, text_encoder=text_encoder, target_sr=target_sr, limit=limit, max_audio_length=max_audio_length, max_text_length=max_text_length, shuffle_index=shuffle_index, instance_transforms=instance_transforms)
 
     @staticmethod
     def _get_audio_length(audio_path):
         """
-        Return duration in seconds.
-
-        torchaudio.info is used when available.
-        torch.load fallback is important for environments where
-        torchaudio.info is unavailable.
+        Return duration in seconds
         """
         try:
             info = torchaudio.info(str(audio_path))

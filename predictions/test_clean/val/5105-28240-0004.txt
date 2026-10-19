@@ -1,0 +1,1 @@
+if the count were on board a strange fatality was bringing him to the presence of his rival

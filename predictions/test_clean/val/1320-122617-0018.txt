@@ -1,0 +1,1 @@
+it was silent and gloomy being tenanted solely by the captive and lighted by the dying embers of a fire which had been used for the purpose of cookery

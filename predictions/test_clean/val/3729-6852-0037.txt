@@ -1,0 +1,1 @@
+she introduced me to all her guests and gave me some particulars respecting every one of them

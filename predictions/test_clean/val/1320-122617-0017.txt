@@ -1,0 +1,1 @@
+then as if satisfied of their safety the scout left his position and slowly entered the place

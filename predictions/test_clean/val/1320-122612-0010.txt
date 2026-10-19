@@ -1,0 +1,1 @@
+see said uncas pointing north and south at the evident marks of the broad trail on either side of him the dark hair has gone toward the forest

@@ -1,0 +1,1 @@
+he felt a tremor run through the slender yellow figure in front of him

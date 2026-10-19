@@ -1,0 +1,1 @@
+the lodge in which uncas was confined was in the very centre of the village and in a situation perhaps more difficult than any other to approach or leave without observation

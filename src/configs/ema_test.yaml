@@ -1,15 +1,20 @@
+# Small test configuration for the EMA training pipeline
+
 defaults:
-  - baseline
+  - ema
+  - override /datasets: onebatchtest
   - _self_
 
 trainer:
-  use_ema: true
-  ema_decay: 0.999
   n_epochs: 2
   epoch_len: 2
-  monitor: "min val_ema_WER_(Argmax)"
   resume_from: null
 
+dataloader:
+  batch_size: 2
+  num_workers: 0
+  persistent_workers: false
+
 writer:
-  run_name: "ema_smoke_test_2"
-  project_name: "asr-ema-tests"
+  run_name: ema_smoke_test
+  project_name: asr-ema-tests

@@ -1,0 +1,1 @@
+to all these inquiries the count responded in the affirmative

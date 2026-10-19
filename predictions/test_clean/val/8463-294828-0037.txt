@@ -1,0 +1,1 @@
+departing from five hundred thousand throats three cheers burst forth in succession

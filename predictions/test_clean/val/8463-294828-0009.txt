@@ -1,0 +1,1 @@
+not once did he comment on the length or the hardships of the journey

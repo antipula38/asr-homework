@@ -1,0 +1,1 @@
+bravely and generously as he battled in my behalf and this and more will i dare in his service

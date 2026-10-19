@@ -1,0 +1,1 @@
+the hope and dream of harvest was upon the land

@@ -1,0 +1,1 @@
+he clasped his hands on the desk and said

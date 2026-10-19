@@ -1,0 +1,1 @@
+suddenly he heard him at the very door there was no possible escape

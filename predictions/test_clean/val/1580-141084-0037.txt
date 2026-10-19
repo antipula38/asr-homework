@@ -1,0 +1,1 @@
+when i approached your room i examined the window

@@ -1,0 +1,1 @@
+the rector did not ask for a catechism to hear the lesson from

@@ -1,0 +1,1 @@
+for a full hour he had paced up and down waiting but he could wait no longer

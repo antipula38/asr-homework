@@ -1,0 +1,1 @@
+if we had retained the subject or act in knowledge the whole problem of memory would have been comparatively simple

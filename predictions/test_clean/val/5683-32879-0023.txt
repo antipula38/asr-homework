@@ -1,0 +1,1 @@
+you resemble me rachel you are fearless and inflexible and generous

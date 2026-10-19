@@ -1,0 +1,1 @@
+all about him was a tumult of bright and broken color scattered and broad splashes

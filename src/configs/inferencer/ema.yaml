@@ -1,0 +1,7 @@
+defaults:
+  - base
+  - _self_
+
+class_path: src.trainer.EMAInferencer
+
+decoder: beam_lm

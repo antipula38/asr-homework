@@ -1,3 +1,4 @@
+"""Combinations of of multiple LibriSpeech training splits"""
 import hashlib
 import json
 from pathlib import Path
@@ -8,39 +9,20 @@ from src.datasets.librispeech_dataset import LibrispeechDataset
 
 class MixedLibrispeechDataset(BaseDataset):
     """
-    Deterministic mixture of several LibriSpeech training splits.
-
-    Example:
-        train-clean-100 -> all
-        train-clean-360 -> 80 hours
-        train-other-500 -> 120 hours
-
-    Selection is deterministic:
-    SHA256(seed + split + utterance_id)
-
-    Therefore the same samples are selected in every Kaggle session.
+    Build a deterministic hour-limited combination of LibriSpeech splits
     """
 
     MANIFEST_VERSION = 1
 
-    def __init__(
-        self,
-        parts_hours,
-        manifest_path,
-        seed=42,
-        text_encoder=None,
-        target_sr=16000,
-        limit=None,
-        max_audio_length=None,
-        max_text_length=None,
-        instance_transforms=None,
-    ):
+    def __init__(self, parts_hours, manifest_path, seed=42, text_encoder=None, target_sr=16000, limit=None, max_audio_length=None, max_text_length=None, instance_transforms=None):
+        """
+        Build or load the mixed-dataset manifest
+        """
         self.parts_hours = dict(parts_hours)
         self.manifest_path = Path(manifest_path)
         self.seed = int(seed)
 
         # Load complete indexes using already existing
-        # LibrispeechDataset implementation.
         full_indexes = {}
 
         for part in self.parts_hours:
@@ -69,43 +51,31 @@ class MixedLibrispeechDataset(BaseDataset):
 
         self._print_statistics(index)
 
-        super().__init__(
-            index=index,
-            text_encoder=text_encoder,
-            target_sr=target_sr,
-            limit=limit,
-            max_audio_length=max_audio_length,
-            max_text_length=max_text_length,
-            shuffle_index=False,
-            instance_transforms=instance_transforms,
-        )
+        super().__init__(index=index, text_encoder=text_encoder, target_sr=target_sr, limit=limit, max_audio_length=max_audio_length, max_text_length=max_text_length, shuffle_index=False, instance_transforms=instance_transforms)
 
     @staticmethod
     def _utterance_id(record):
+        """
+        Return the utterance identifier of an index record
+        """
         return Path(record["path"]).stem
 
     def _stable_hash(self, part, record):
+        """
+        Return a hash used for sample selection
+        """
         utterance_id = self._utterance_id(record)
 
         value = f"{self.seed}:{part}:{utterance_id}"
 
-        return hashlib.sha256(
-            value.encode("utf-8")
-        ).hexdigest()
+        return hashlib.sha256(value.encode("utf-8")).hexdigest()
 
-    def _select_hours(
-        self,
-        part,
-        records,
-        target_hours,
-    ):
+    def _select_hours(self, part, records, target_hours):
         """
-        Select approximately target_hours using stable hashing.
-
-        audio_len in the project index is measured in seconds.
+        Select approximately target_hours using stable hashing
         """
 
-        # None means take the complete split.
+        # None means take the complete split
         if target_hours is None:
             return list(records)
 
@@ -129,6 +99,9 @@ class MixedLibrispeechDataset(BaseDataset):
         return selected
 
     def _create_manifest(self, full_indexes):
+        """
+        Create a manifest describing selected utterances per split
+        """
         manifest = {
             "version": self.MANIFEST_VERSION,
             "seed": self.seed,
@@ -137,21 +110,11 @@ class MixedLibrispeechDataset(BaseDataset):
         }
 
         for part, target_hours in self.parts_hours.items():
-            records = self._select_hours(
-                part,
-                full_indexes[part],
-                target_hours,
-            )
+            records = self._select_hours(part, full_indexes[part], target_hours)
 
-            ids = [
-                self._utterance_id(record)
-                for record in records
-            ]
+            ids = [self._utterance_id(record) for record in records]
 
-            actual_hours = (
-                sum(float(record["audio_len"]) for record in records)
-                / 3600.0
-            )
+            actual_hours = (sum(float(record["audio_len"]) for record in records) / 3600.0)
 
             manifest["splits"][part] = {
                 "utterance_ids": ids,
@@ -162,21 +125,13 @@ class MixedLibrispeechDataset(BaseDataset):
         return manifest
 
     def _save_manifest(self, manifest):
-        self.manifest_path.parent.mkdir(
-            parents=True,
-            exist_ok=True,
-        )
+        """
+        Save the selection manifest to disk
+        """
+        self.manifest_path.parent.mkdir(parents=True, exist_ok=True)
 
-        with self.manifest_path.open(
-            "w",
-            encoding="utf-8",
-        ) as file:
-            json.dump(
-                manifest,
-                file,
-                indent=2,
-                ensure_ascii=False,
-            )
+        with self.manifest_path.open("w", encoding="utf-8") as file:
+            json.dump(manifest, file, indent=2, ensure_ascii=False)
 
         print(
             f"Created deterministic manifest: "
@@ -184,10 +139,10 @@ class MixedLibrispeechDataset(BaseDataset):
         )
 
     def _load_manifest(self):
-        with self.manifest_path.open(
-            "r",
-            encoding="utf-8",
-        ) as file:
+        """
+        Load an existing selection manifest
+        """
+        with self.manifest_path.open("r", encoding="utf-8") as file:
             manifest = json.load(file)
 
         if manifest["version"] != self.MANIFEST_VERSION:
@@ -207,42 +162,30 @@ class MixedLibrispeechDataset(BaseDataset):
 
         return manifest
 
-    def _records_from_manifest(
-        self,
-        full_indexes,
-        manifest,
-    ):
+    def _records_from_manifest(self, full_indexes, manifest):
+        """
+        Resolve manifest utterance IDs back to dataset records
+        """
         result = []
 
         for part in self.parts_hours:
             records = full_indexes[part]
 
-            record_by_id = {
-                self._utterance_id(record): record
-                for record in records
-            }
+            record_by_id = {self._utterance_id(record): record for record in records}
 
-            selected_ids = (
-                manifest["splits"][part]["utterance_ids"]
-            )
+            selected_ids = (manifest["splits"][part]["utterance_ids"])
 
-            missing = [
-                utterance_id
-                for utterance_id in selected_ids
-                if utterance_id not in record_by_id
-            ]
+            missing = [utterance_id for utterance_id in selected_ids if utterance_id not in record_by_id]
 
             if missing:
                 raise RuntimeError(
                     f"{part}: {len(missing)} utterances "
-                    f"from manifest are missing. "
-                    f"Example: {missing[:5]}"
+                    f"from manifest are missing"
                 )
 
             for utterance_id in selected_ids:
                 record = dict(record_by_id[utterance_id])
 
-                # useful for debugging/statistics
                 record["source_split"] = part
 
                 result.append(record)
@@ -251,6 +194,9 @@ class MixedLibrispeechDataset(BaseDataset):
 
     @staticmethod
     def _print_statistics(index):
+        """
+        Print duration and utterance counts for the mixed dataset
+        """
         stats = {}
 
         for record in index:
@@ -262,12 +208,9 @@ class MixedLibrispeechDataset(BaseDataset):
                     "records": 0,
                 }
 
-            stats[part]["seconds"] += float(
-                record["audio_len"]
-            )
+            stats[part]["seconds"] += float(record["audio_len"])
             stats[part]["records"] += 1
 
-        print("=" * 60)
         print("Mixed LibriSpeech dataset")
 
         total_seconds = 0.0
@@ -285,10 +228,8 @@ class MixedLibrispeechDataset(BaseDataset):
             total_seconds += values["seconds"]
             total_records += values["records"]
 
-        print("-" * 60)
         print(
             f"{'TOTAL':20s}: "
             f"{total_seconds / 3600.0:8.2f} h | "
             f"{total_records:6d} utterances"
         )
-        print("=" * 60)

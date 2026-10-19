@@ -1,3 +1,4 @@
+"""Train and evaluate an ASR model from a Hydra configuration"""
 import warnings
 
 import hydra
@@ -16,9 +17,7 @@ warnings.filterwarnings("ignore", category=UserWarning)
 @hydra.main(version_base=None, config_path="src/configs", config_name="baseline")
 def main(config):
     """
-    Main script for training. Instantiates the model, optimizer, scheduler,
-    metrics, logger, writer, and dataloaders. Runs Trainer to train and
-    evaluate the model.
+    Build the ASR training pipeline and start model training
 
     Args:
         config (DictConfig): hydra experiment config.
@@ -112,11 +111,7 @@ def main(config):
         skip_oom=config.trainer.get("skip_oom", True),
     )
 
-    print("Train loader type:", type(trainer.train_dataloader))
-    print("Train loader:", trainer.train_dataloader)
 
-    for part, loader in trainer.evaluation_dataloaders.items():
-        print(part, type(loader))
     trainer.train()
 
 

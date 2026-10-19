@@ -1,0 +1,1 @@
+the scout who had left david at the door to ascertain they were not observed thought it prudent to preserve his disguise until assured of their privacy
