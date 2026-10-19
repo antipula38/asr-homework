@@ -108,7 +108,8 @@ wandb/
 outputs/
 saved/*
 !saved/final_model/
-!saved/final_model/.gitkeep
+!saved/final_model/model_best.pth
+
 # editor, os cache directory
 .vscode/
 .idea/
