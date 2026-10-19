@@ -1,5 +1,6 @@
 import torch
 from tqdm.auto import tqdm
+from pathlib import Path
 
 from src.metrics.tracker import MetricTracker
 from src.trainer.base_trainer import BaseTrainer
@@ -85,6 +86,7 @@ class Inferencer(BaseTrainer):
             # init model
             self._from_pretrained(config.inferencer.get("from_pretrained"))
 
+    
     def run_inference(self):
         """
         Run inference on each partition.
@@ -134,33 +136,48 @@ class Inferencer(BaseTrainer):
             for met in self.metrics["inference"]:
                 dist, length = met(**batch)
                 metrics.update_ratio(met.name, dist, length)
+                
+        if self.save_path is not None:
+            part_path = self.save_path / part
+            part_path.mkdir(
+                exist_ok=True,
+                parents=True,
+            )
+
+            log_probs = batch["log_probs"].detach().cpu()
+            log_probs_length = (
+                batch["log_probs_length"]
+                .detach()
+                .cpu()
+                .long()
+            )
+
+            audio_paths = batch["audio_path"]
+
+            for log_prob, length, audio_path in zip(
+                log_probs,
+                log_probs_length.tolist(),
+                audio_paths,
+            ):
+                prediction = self._decode_prediction(
+                    log_prob,
+                    length,
+                )
+
+                # abc123.wav -> abc123
+                utterance_id = Path(audio_path).stem
+
+                output_path = (
+                    part_path / f"{utterance_id}.txt"
+                )
+
+                output_path.write_text(
+                    prediction.strip() + "\n",
+                    encoding="utf-8",
+                )
+
         return batch
 
-        # Some saving logic. This is an example
-        # Use if you need to save predictions on disk
-
-        batch_size = batch["log_probs"].shape[0]
-        current_id = batch_idx * batch_size
-
-        for i in range(batch_size):
-            # clone because of
-            # https://github.com/pytorch/pytorch/issues/1995
-            logits = batch["logits"][i].clone()
-            label = batch["labels"][i].clone()
-            pred_label = logits.argmax(dim=-1)
-
-            output_id = current_id + i
-
-            output = {
-                "pred_label": pred_label,
-                "label": label,
-            }
-
-            if self.save_path is not None:
-                # you can use safetensors or other lib here
-                torch.save(output, self.save_path / part / f"output_{output_id}.pth")
-
-        return batch
 
     def _inference_part(self, part, dataloader):
         """
@@ -196,3 +213,44 @@ class Inferencer(BaseTrainer):
                 )
 
         return self.evaluation_metrics.result()
+    def _decode_prediction(self, log_probs, length):
+        """
+        Decode one utterance according to inferencer.decoder.
+
+        Supported:
+            beam_lm
+            beam
+            argmax
+        """
+        decoder = self.cfg_trainer.get("decoder", "beam_lm")
+        log_probs = log_probs[:length]
+
+        if decoder == "argmax":
+            token_ids = log_probs.argmax(dim=-1).tolist()
+            return self.text_encoder.ctc_decode(token_ids)
+
+        if decoder == "beam":
+            beam_size = self.cfg_trainer.get("beam_size", 10)
+
+            return self.text_encoder.ctc_beam_search(
+                log_probs,
+                beam_size=beam_size,
+            )
+
+        if decoder == "beam_lm":
+            lm_config = self.config.get("lm")
+
+            if lm_config is None or not lm_config.get("enabled", False):
+                raise RuntimeError(
+                    "decoder=beam_lm requires enabled LM config."
+                )
+
+            return self.text_encoder.ctc_decode_lm(
+                log_probs,
+                beam_size=lm_config.beam_size,
+            )
+
+        raise ValueError(
+            f"Unknown decoder '{decoder}'. "
+            "Expected one of: beam_lm, beam, argmax."
+        )

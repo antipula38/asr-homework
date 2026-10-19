@@ -13,7 +13,7 @@ conv_strides:
   - [2, 2]
   - [2, 1]
 
-hidden_size: 512
+hidden_size: 640
 num_layers: 3
 bidirectional: true
 dropout: 0.0

@@ -45,6 +45,16 @@ def move_batch_transforms_to_device(batch_transforms, device):
                 transforms[transform_name] = transforms[transform_name].to(device)
 
 
+def _get_seed(config):
+    """Get reproducibility seed for training or inference."""
+    if config.get("trainer") is not None:
+        return config.trainer.get("seed", 42)
+
+    if config.get("inferencer") is not None:
+        return config.inferencer.get("seed", 42)
+
+    return 42
+
 def get_dataloaders(config, text_encoder, device):
     """
     Create dataloaders for each of the dataset partitions.
@@ -68,16 +78,13 @@ def get_dataloaders(config, text_encoder, device):
 
     # dataloaders init
     dataloaders = {}
+    seed = _get_seed(config)
     for dataset_partition in config.datasets.keys():
         # dataset partition init
         dataset = instantiate(
             config.datasets[dataset_partition], text_encoder=text_encoder
         )  # instance transforms are defined inside
 
-        assert config.dataloader.batch_size <= len(dataset), (
-            f"The batch size ({config.dataloader.batch_size}) cannot "
-            f"be larger than the dataset length ({len(dataset)})"
-        )
 
         if dataset_partition == "train":
             sampler = SortaGradSampler(dataset, seed=config.trainer.seed)
@@ -88,7 +95,7 @@ def get_dataloaders(config, text_encoder, device):
 
         generator = torch.Generator()
         generator.manual_seed(
-            config.trainer.seed + (0 if dataset_partition == "train" else 1)
+            seed + (0 if dataset_partition == "train" else 1)
         )
         
         partition_dataloader = instantiate(

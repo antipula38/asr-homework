@@ -1,0 +1,13 @@
+test:
+  _target_: src.datasets.CustomDirDataset
+
+  data_dir: data/custom_dataset
+
+  target_sr: 16000
+
+  instance_transforms: ${transforms.instance_transforms.inference}
+
+  limit: null
+  max_audio_length: null
+  max_text_length: null
+  shuffle_index: false
