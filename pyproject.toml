@@ -1,0 +1,26 @@
+[project]
+name = "asr-homework"
+version = "0.1.0"
+requires-python = ">=3.11,<3.12"
+
+dependencies = [
+    "torch==2.2.0",
+    "torchvision==0.17.0",
+    "torchaudio==2.2.0",
+    "numpy==1.26.4",
+    "pandas",
+    "matplotlib",
+    "tqdm",
+    "soundfile",
+    "librosa",
+    "pillow",
+    "datasets",
+    "wget",
+    "gdown",
+    "hydra-core",
+    "torch-audiomentations",
+    "pyctcdecode",
+    "kenlm @ https://github.com/kpu/kenlm/archive/master.zip",
+    "wandb",
+    "comet-ml",
+]

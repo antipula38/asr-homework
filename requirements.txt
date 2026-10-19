@@ -1,10 +1,6 @@
-torch==2.2.0; python_version < "3.13"
-torchvision==0.17.0; python_version < "3.13"
-torchaudio==2.2.0; python_version < "3.13"
-
-torch==2.7.1; python_version >= "3.13"
-torchvision==0.22.1; python_version >= "3.13"
-torchaudio==2.7.1; python_version >= "3.13"
+torch==2.2.0
+torchvision==0.17.0
+torchaudio==2.2.0
 
 numpy==1.26.4
 pandas
@@ -19,9 +15,6 @@ gdown
 hydra-core
 torch_audiomentations
 pyctcdecode
-kenlm
+kenlm @ https://github.com/kpu/kenlm/archive/master.zip
 wandb
 comet_ml
-black
-isort
-pre-commit
