@@ -108,6 +108,7 @@ wandb/
 outputs/
 saved/*
 !saved/final_model/
+!saved/final_model/.gitkeep
 # editor, os cache directory
 .vscode/
 .idea/
