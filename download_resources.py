@@ -11,7 +11,7 @@ LM_URL = (
     "3-gram.pruned.1e-7.arpa.gz"
 )
 
-CHECKPOINT_URL = None
+CHECKPOINT_URL = "saved/final_model/model_best.pth"
 
 LM_PATH = Path("resources/lm/3-gram.pruned.1e-7.arpa")
 CHECKPOINT_PATH = Path("saved/300h_640hs/model_best.pth")
@@ -62,6 +62,7 @@ def download_checkpoint():
     urllib.request.urlretrieve(CHECKPOINT_URL, CHECKPOINT_PATH)
 
     print(f"Checkpoint saved to: {CHECKPOINT_PATH}")
+
 
 
 def main():
