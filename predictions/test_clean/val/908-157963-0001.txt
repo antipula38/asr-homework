@@ -1,1 +1,0 @@
-o life of this are spring

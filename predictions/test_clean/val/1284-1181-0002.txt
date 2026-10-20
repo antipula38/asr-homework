@@ -1,1 +1,0 @@
-the head of the patchwork girl was the most curious part of her

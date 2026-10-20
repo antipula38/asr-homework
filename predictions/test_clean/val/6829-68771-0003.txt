@@ -1,1 +1,0 @@
-the democratic committee figured out a way to do this

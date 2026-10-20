@@ -1,1 +1,0 @@
-there is of course a difference between knowing the temporal relation of a remembered event to the present and knowing the time order of two remembered events

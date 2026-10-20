@@ -1,1 +1,0 @@
-it is a duty said i

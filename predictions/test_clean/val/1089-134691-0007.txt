@@ -1,1 +1,0 @@
-soon the whole bridge was trembling and resounding

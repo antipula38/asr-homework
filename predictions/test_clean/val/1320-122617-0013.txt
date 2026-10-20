@@ -1,1 +1,0 @@
-delivered in a strong tone of ascent announced the gratification the savage would receive and witnessing such an exhibition of weakness and an enemy so long hated and so much feared

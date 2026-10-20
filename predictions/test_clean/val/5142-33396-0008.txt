@@ -1,1 +1,0 @@
-i painted the eyes red for anger

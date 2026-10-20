@@ -1,1 +1,0 @@
-robin carefully descended the latter and found himself soon upon firm rocky ground

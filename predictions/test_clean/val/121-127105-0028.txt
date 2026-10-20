@@ -1,1 +1,0 @@
-the awkward thing was that they had practically no other relations and that his own affairs took up all his time

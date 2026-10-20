@@ -1,1 +1,0 @@
-he was pacing swiftly up and down his room

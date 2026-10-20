@@ -1,1 +1,0 @@
-i believe i have a little taste that way those are all real you know those jewels

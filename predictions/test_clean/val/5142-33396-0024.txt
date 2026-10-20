@@ -1,1 +1,0 @@
-i stood with my back to the wall for i wanted no sword reaching out of the dark for me

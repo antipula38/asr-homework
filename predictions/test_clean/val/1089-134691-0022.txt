@@ -1,1 +1,0 @@
-he stood still in deference to their calls and parried their banter with easy words

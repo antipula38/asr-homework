@@ -1,1 +1,0 @@
-then he tossed it down and seized the next

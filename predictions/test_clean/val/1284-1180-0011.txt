@@ -1,1 +1,0 @@
-i am my dear and all strangers are welcome to my home

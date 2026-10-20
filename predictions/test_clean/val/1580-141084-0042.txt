@@ -1,1 +1,0 @@
-a sudden impulse came over him to enter and see if they were indeed the proofs

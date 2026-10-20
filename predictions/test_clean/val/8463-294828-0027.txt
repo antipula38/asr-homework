@@ -1,1 +1,0 @@
-i left instructions for shipping my containers of stuffed animals and dried plants to paris france

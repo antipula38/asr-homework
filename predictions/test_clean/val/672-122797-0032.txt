@@ -1,1 +1,0 @@
-cried the young ladies and they quickly put out the fire

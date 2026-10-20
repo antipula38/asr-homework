@@ -1,1 +1,0 @@
-embrace him and forget about the nature of god

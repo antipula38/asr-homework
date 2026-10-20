@@ -1,1 +1,0 @@
-she had another weight on her mind this christmas

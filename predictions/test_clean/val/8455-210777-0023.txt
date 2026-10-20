@@ -1,1 +1,0 @@
-we sat with the officer some little time after dinner and then went ashore

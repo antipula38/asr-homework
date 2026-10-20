@@ -1,1 +1,0 @@
-thus no knowledge as to the past is to be derived from the feeling of familiarity alone

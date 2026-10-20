@@ -1,1 +1,0 @@
-was it not enough to say from god the father

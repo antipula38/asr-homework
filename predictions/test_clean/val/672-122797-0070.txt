@@ -1,1 +1,0 @@
-the golden star of tinsel was still on the top of the tree and glittered in the sunshine

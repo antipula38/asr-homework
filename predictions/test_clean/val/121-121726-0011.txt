@@ -1,1 +1,0 @@
-husband the next thing to a wife

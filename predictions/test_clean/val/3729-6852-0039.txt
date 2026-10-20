@@ -1,1 +1,0 @@
-he himself recited the same passage in french and politely pointed out the parts in which he thought that i had improved on the original

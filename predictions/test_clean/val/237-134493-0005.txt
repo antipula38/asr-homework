@@ -1,1 +1,0 @@
-he was a splendid figure of a boy tall and straight as a young pine tree with a handsome head and stormy gray eyes deeply set under a serious brow

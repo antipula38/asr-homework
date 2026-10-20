@@ -1,1 +1,0 @@
-a little cracked that in the popular phrase was my impression of the stranger who now made his appearance in the supper room

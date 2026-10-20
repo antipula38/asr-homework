@@ -1,1 +1,0 @@
-but the more forgetfulness had then prevailed the more powerful was the force of remembrance when she awoke

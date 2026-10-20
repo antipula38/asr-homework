@@ -1,1 +1,0 @@
-i must come another day and see your husband i want to have a consultation with him about horses

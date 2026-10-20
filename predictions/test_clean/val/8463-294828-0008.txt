@@ -1,1 +1,0 @@
-and yet what a fine gallant lad

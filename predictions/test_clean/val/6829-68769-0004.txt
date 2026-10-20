@@ -1,1 +1,0 @@
-but they could not have proven a case against lucy if she was innocent and all their threats of arresting her were probably a mere bluff

@@ -1,1 +1,0 @@
-but the plant ran and it was the first three wire station in this country

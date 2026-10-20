@@ -1,1 +1,0 @@
-the vicious character of sin is brought out by the words who gave himself for our sins

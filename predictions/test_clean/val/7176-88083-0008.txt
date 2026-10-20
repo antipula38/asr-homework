@@ -1,1 +1,0 @@
-in despair he hurled himself downward too soon

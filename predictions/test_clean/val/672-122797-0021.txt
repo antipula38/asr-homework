@@ -1,1 +1,0 @@
-and towards christmas he was one of the first that was cut down

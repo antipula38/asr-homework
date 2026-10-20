@@ -1,1 +1,0 @@
-in every way they sought to undermine the authority of saint paul

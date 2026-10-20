@@ -1,1 +1,0 @@
-then there were three or four leading men of the community with their wives who were for the most part the fathers and mothers of the young ladies

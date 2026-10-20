@@ -1,1 +1,0 @@
-do you remember that first walk we took together in paris

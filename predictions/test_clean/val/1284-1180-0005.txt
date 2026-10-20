@@ -1,1 +1,0 @@
-no one would disturb their little house even if any one came so far into the thick forest while they were gone

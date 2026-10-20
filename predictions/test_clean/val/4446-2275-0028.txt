@@ -1,1 +1,0 @@
-yes yes she hurried pulling her hand gently away from him

@@ -1,1 +1,0 @@
-the ideas also remain but they have become types in nature forms of men animals birds fishes

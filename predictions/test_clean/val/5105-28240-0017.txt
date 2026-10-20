@@ -1,1 +1,0 @@
-some mysterious force seemed to have brought about a convulsion of the elements

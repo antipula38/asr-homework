@@ -1,1 +1,0 @@
-a voice from beyond the world was calling

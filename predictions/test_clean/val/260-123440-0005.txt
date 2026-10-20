@@ -1,1 +1,0 @@
-and yesterday things went on just as usual

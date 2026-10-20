@@ -1,1 +1,0 @@
-i get nothing but misery out of either

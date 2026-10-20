@@ -1,1 +1,0 @@
-and what through the left hand window

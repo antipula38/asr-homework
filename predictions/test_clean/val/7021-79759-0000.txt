@@ -1,1 +1,0 @@
-nature of the effect produced by early impressions

@@ -1,1 +1,0 @@
-what i say is altogether on your own account

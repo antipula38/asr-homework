@@ -1,1 +1,0 @@
-and god the father who raised him from the dead

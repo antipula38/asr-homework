@@ -1,1 +1,0 @@
-it would serve you all right if she walked off with carl

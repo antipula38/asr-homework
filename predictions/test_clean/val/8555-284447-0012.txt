@@ -1,1 +1,0 @@
-the captain shook his head

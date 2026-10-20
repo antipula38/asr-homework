@@ -1,1 +1,0 @@
-this is the explanation of the shallows which are found in that part of the atlantic ocean

@@ -1,1 +1,0 @@
-a terrible thought flashed into my mind

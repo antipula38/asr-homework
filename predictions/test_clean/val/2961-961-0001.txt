@@ -1,1 +1,0 @@
-and now he desires to see the ideal state set in motion he would like to know how she behaved in some great struggle

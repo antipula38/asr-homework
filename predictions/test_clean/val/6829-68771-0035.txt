@@ -1,1 +1,0 @@
-will you leave me alone in my own room or must i go away to escape you

@@ -1,1 +1,0 @@
-you have come to us threatening us with absolute destruction

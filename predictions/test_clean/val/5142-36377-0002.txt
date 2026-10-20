@@ -1,1 +1,0 @@
-the sound of an imperative and uncompromising bell recalled me in due time to the regions of reality

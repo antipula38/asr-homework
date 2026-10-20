@@ -1,1 +1,0 @@
-they must have some characteristic which makes us regard them as referring to more or less remote portions of the past

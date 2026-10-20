@@ -1,1 +1,0 @@
-he seemed born to please without being conscious of the power he possessed

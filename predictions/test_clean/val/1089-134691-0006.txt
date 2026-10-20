@@ -1,1 +1,0 @@
-the pride of that dim image brought back to his mind the dignity of the office he had refused

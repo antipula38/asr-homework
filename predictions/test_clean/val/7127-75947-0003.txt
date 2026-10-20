@@ -1,1 +1,0 @@
-yes the character which your royal highness assumed is in perfect harmony with your own

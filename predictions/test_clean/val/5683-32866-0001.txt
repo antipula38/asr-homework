@@ -1,1 +1,0 @@
-and he added something still less complimentary

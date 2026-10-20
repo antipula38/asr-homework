@@ -1,1 +1,0 @@
-he panted to know if she too knew or knew and cared not or cared and knew not

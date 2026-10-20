@@ -1,1 +1,0 @@
-our baggage was immediately carried to the deck of the frigate i rushed aboard

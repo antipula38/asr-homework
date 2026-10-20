@@ -1,1 +1,0 @@
-he was the last to turn to christ

@@ -1,1 +1,0 @@
-horse sense a degree of wisdom that keeps one from betting on the races

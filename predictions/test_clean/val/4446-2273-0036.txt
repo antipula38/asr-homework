@@ -1,1 +1,0 @@
-alexander clenched the two hands at his sides

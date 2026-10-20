@@ -1,1 +1,0 @@
-they informed the english parliament of this unexpected incident and assured them that they had entered into no private treaty with the king

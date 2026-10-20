@@ -1,1 +1,0 @@
-at the sudden sharp sting of it the great bird turned his head and noticed for the first time the fisherman standing on the bank

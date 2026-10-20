@@ -1,1 +1,0 @@
-i cannot allow the examination to be held if one of the papers has been tampered with the situation must be faced

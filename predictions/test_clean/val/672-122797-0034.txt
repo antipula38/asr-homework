@@ -1,1 +1,0 @@
-a story cried the children drawing a little fat man towards the tree

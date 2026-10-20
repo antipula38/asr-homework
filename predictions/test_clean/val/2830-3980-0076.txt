@@ -1,1 +1,0 @@
-on the other hand we are not to regard them as so terrible that we must despair

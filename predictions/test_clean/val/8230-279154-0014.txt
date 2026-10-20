@@ -1,1 +1,0 @@
-i come now to the other characteristic which memory images must have in order to account for our knowledge of the past

@@ -1,1 +1,0 @@
-i did not wrong myself so but i placed a wrong on thee

@@ -1,1 +1,0 @@
-she pressed his hand gently in gratitude

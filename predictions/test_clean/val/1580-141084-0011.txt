@@ -1,1 +1,0 @@
-when we were out in the darkness of the quadrangle we again looked up at the windows

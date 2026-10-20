@@ -1,1 +1,0 @@
-steam up and canvas spread the schooner started eastwards

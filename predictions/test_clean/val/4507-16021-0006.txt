@@ -1,1 +1,0 @@
-slang is odious

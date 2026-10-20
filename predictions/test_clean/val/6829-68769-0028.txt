@@ -1,1 +1,0 @@
-he is supposed to sign all the checks of the concert

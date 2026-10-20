@@ -1,1 +1,0 @@
-the servants as well as the young ladies decorated it

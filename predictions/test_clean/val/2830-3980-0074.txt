@@ -1,1 +1,0 @@
-this attitude is universal and particularly developed in those who consider themselves better than others

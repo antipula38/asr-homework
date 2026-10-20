@@ -1,1 +1,0 @@
-the three modes of management

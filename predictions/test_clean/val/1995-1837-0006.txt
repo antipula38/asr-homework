@@ -1,1 +1,0 @@
-the world was water veiled in mists

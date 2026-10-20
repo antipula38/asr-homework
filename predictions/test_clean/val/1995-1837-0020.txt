@@ -1,1 +1,0 @@
-the years of the days of her dying were ten

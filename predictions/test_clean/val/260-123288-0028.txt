@@ -1,1 +1,0 @@
-we suffer stifling pains

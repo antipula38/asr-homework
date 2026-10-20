@@ -1,1 +1,0 @@
-a new member of the family circle who instantly attracted my attention entered the room

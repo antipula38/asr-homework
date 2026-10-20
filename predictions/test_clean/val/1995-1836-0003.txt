@@ -1,1 +1,0 @@
-she was not herself a notably intelligent woman she greatly admired intelligence or whatever looked to her like intelligence in others

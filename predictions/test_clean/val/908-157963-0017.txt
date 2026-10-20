@@ -1,1 +1,0 @@
-the cloud then showed his golden head and his bright form emerged

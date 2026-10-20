@@ -1,1 +1,0 @@
-yet little as it was it had already made a vast difference in the aspect of the room

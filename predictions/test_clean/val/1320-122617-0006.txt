@@ -1,1 +1,0 @@
-can these things be returned david breathing more freely as the truth began to dawn upon him

@@ -1,1 +1,0 @@
-hilda was very nice to him and he sat on the edge of his chair flushed with his conversational efforts and moving his chin about nervously over his high collar

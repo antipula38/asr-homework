@@ -1,1 +1,0 @@
-but in the rest of the work the power of language seems to fail him and the dramatic form is wholly given up

@@ -1,1 +1,0 @@
-it would have been more wonderful had he spoken without a bidding

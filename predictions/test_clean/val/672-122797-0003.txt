@@ -1,1 +1,0 @@
-but this was what the tree could not bear to hear

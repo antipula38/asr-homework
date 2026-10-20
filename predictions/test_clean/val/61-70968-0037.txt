@@ -1,1 +1,0 @@
-what is your name lording asked the little stroller presently

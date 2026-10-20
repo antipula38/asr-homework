@@ -1,1 +1,0 @@
-but the tree did not rejoice at all he grew and grew and was green both winter and summer

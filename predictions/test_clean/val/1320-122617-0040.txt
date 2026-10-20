@@ -1,1 +1,0 @@
-he had no occasion to delay for at the next instant a burst of cries filled the outer air and ran along the whole extent of the village

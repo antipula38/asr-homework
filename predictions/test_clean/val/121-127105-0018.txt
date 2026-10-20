@@ -1,1 +1,0 @@
-cried the ladies whose departure had been fixed
