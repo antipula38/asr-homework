@@ -1,6 +1,7 @@
 [project]
 name = "asr-homework"
 version = "0.1.0"
+description = "Automatic Speech Recognition project based on DeepSpeech2 and CTC"
 requires-python = ">=3.11,<3.12"
 
 dependencies = [
@@ -23,4 +24,5 @@ dependencies = [
     "kenlm @ https://github.com/kpu/kenlm/archive/master.zip",
     "wandb",
     "comet-ml",
+    "pyarrow>=24,<26",
 ]

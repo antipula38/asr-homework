@@ -6,15 +6,20 @@ numpy==1.26.4
 pandas
 matplotlib
 tqdm
+
 soundfile
 librosa
 Pillow
+
 datasets
 wget
 gdown
+
 hydra-core
-torch_audiomentations
+torch-audiomentations
+
 pyctcdecode
 kenlm @ https://github.com/kpu/kenlm/archive/master.zip
+
 wandb
-comet_ml
+comet-ml

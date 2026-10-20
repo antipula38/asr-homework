@@ -1,76 +1,108 @@
-"""Download resources required for ASR inference"""
+#!/usr/bin/env python3
+from __future__ import annotations
 
 import gzip
 import shutil
+import subprocess
 import urllib.request
 from pathlib import Path
 
+ROOT = Path(__file__).resolve().parent
 
-LM_URL = (
-    "https://www.openslr.org/resources/11/"
-    "3-gram.pruned.1e-7.arpa.gz"
-)
+CHECKPOINT = ROOT / "saved/final_model/model_best.pth"
 
-CHECKPOINT_URL = "saved/final_model/model_best.pth"
-
-LM_PATH = Path("resources/lm/3-gram.pruned.1e-7.arpa")
-CHECKPOINT_PATH = Path("saved/300h_640hs/model_best.pth")
+LM_DIR = ROOT / "resources/lm"
+LM_PATH = LM_DIR / "3-gram.pruned.1e-7.arpa"
+LM_GZ = LM_DIR / "3-gram.pruned.1e-7.arpa.gz"
+LM_URL = "https://www.openslr.org/resources/11/3-gram.pruned.1e-7.arpa.gz"
 
 
-def download_language_model():
-    """
-    Download and extract the LibriSpeech 3-gram language model
-    """
-    if LM_PATH.exists():
-        print(f"Language model already exists: {LM_PATH}")
-        return
-
-    LM_PATH.parent.mkdir(parents=True, exist_ok=True)
-
-    archive_path = LM_PATH.with_suffix(LM_PATH.suffix + ".gz")
-
-    print(f"Downloading language model from {LM_URL}")
-    urllib.request.urlretrieve(LM_URL, archive_path)
-
-    print("Extracting language model...")
-
-    with gzip.open(archive_path, "rb") as source:
-        with LM_PATH.open("wb") as destination:
-            shutil.copyfileobj(source, destination)
-
-    archive_path.unlink()
-
-    print(f"Language model saved to: {LM_PATH}")
+def run(command: list[str]) -> None:
+    print("$", " ".join(command))
+    subprocess.run(command, cwd=ROOT, check=True)
 
 
-def download_checkpoint():
-    """
-    Download the final model checkpoint
-    """
-    if CHECKPOINT_PATH.exists():
-        print(f"Checkpoint already exists: {CHECKPOINT_PATH}")
-        return
+def is_lfs_pointer(path: Path) -> bool:
+    if not path.exists() or path.stat().st_size > 4096:
+        return False
 
-    if not CHECKPOINT_URL:
+    text = path.read_text(encoding="utf-8", errors="ignore")
+    return "version https://git-lfs.github.com/spec/v1" in text
+
+
+def download_checkpoint() -> None:
+    print("\n[1/2] Downloading final checkpoint with Git LFS...")
+
+    if shutil.which("git-lfs") is None and shutil.which("git") is not None:
+        # `git lfs` may still be available even if the executable is named differently,
+        # so let the command below be the final check.
+        pass
+
+    try:
+        run(["git", "lfs", "install"])
+        run([
+            "git",
+            "lfs",
+            "pull",
+            "--include=saved/final_model/model_best.pth",
+        ])
+    except subprocess.CalledProcessError as exc:
         raise RuntimeError(
-            "CHECKPOINT_URL is not configured in download_resources.py."
+            "Git LFS is required to download model_best.pth. "
+            "Install git-lfs and run this script again."
+        ) from exc
+
+    if not CHECKPOINT.exists():
+        raise RuntimeError(
+            f"Checkpoint was not downloaded: {CHECKPOINT.relative_to(ROOT)}"
         )
 
-    CHECKPOINT_PATH.parent.mkdir(parents=True, exist_ok=True)
+    if is_lfs_pointer(CHECKPOINT):
+        raise RuntimeError(
+            "model_best.pth is still a Git LFS pointer, not the real checkpoint."
+        )
 
-    print(f"Downloading checkpoint from {CHECKPOINT_URL}")
-    urllib.request.urlretrieve(CHECKPOINT_URL, CHECKPOINT_PATH)
+    print(
+        f"Checkpoint ready: {CHECKPOINT.relative_to(ROOT)} "
+        f"({CHECKPOINT.stat().st_size / 1024**2:.1f} MiB)"
+    )
 
-    print(f"Checkpoint saved to: {CHECKPOINT_PATH}")
+
+def download_lm() -> None:
+    print("\n[2/2] Downloading LibriSpeech 3-gram KenLM...")
+
+    LM_DIR.mkdir(parents=True, exist_ok=True)
+
+    if LM_PATH.exists() and LM_PATH.stat().st_size > 1_000_000:
+        print(
+            f"LM already exists: {LM_PATH.relative_to(ROOT)} "
+            f"({LM_PATH.stat().st_size / 1024**2:.1f} MiB)"
+        )
+        return
+
+    print(f"Downloading: {LM_URL}")
+    urllib.request.urlretrieve(LM_URL, LM_GZ)
+
+    print("Extracting language model...")
+    with gzip.open(LM_GZ, "rb") as source, LM_PATH.open("wb") as target:
+        shutil.copyfileobj(source, target)
+
+    LM_GZ.unlink(missing_ok=True)
+
+    if not LM_PATH.exists() or LM_PATH.stat().st_size < 1_000_000:
+        raise RuntimeError("Language model download/extraction failed.")
+
+    print(
+        f"LM ready: {LM_PATH.relative_to(ROOT)} "
+        f"({LM_PATH.stat().st_size / 1024**2:.1f} MiB)"
+    )
 
 
-
-def main():
-    """
-    Download all external resources required for inference
-    """
-    download_language_model()
+def main() -> None:
     download_checkpoint()
+    download_lm()
+
+    print("\nAll inference resources are ready.")
 
 
 if __name__ == "__main__":

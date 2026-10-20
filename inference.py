@@ -1,3 +1,7 @@
+import os
+
+os.environ["MPLBACKEND"] = "Agg"
+
 import warnings
 from pathlib import Path
 
