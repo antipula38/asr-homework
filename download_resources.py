@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 from __future__ import annotations
 
 import gzip
@@ -34,8 +33,6 @@ def download_checkpoint() -> None:
     print("\n[1/2] Downloading final checkpoint with Git LFS...")
 
     if shutil.which("git-lfs") is None and shutil.which("git") is not None:
-        # `git lfs` may still be available even if the executable is named differently,
-        # so let the command below be the final check.
         pass
 
     try:
